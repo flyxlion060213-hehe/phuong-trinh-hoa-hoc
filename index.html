@@ -2,124 +2,176 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>CHEMICAL SOLVER PRO - FULL 195+ PTHH</title>
+    <title>CHEMICAL SOLVER PRO - 200+ REACTIONS</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #f0f7ff;
-            margin: 0; min-height: 100vh; display: flex; justify-content: center; align-items: center; color: #1e293b;
-        }
-        .box {
-            background: #ffffff; width: 95%; max-width: 700px; padding: 35px; border-radius: 24px;
-            border: 1px solid #e2e8f0; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05);
-        }
-        h1 { text-align: center; color: #2563eb; font-size: 24px; margin-bottom: 25px; text-transform: uppercase; }
-        input {
-            width: 100%; padding: 18px; font-size: 16px; background: #f8fafc; border: 2px solid #e2e8f0;
-            border-radius: 12px; box-sizing: border-box; text-align: center; outline: none; transition: 0.3s;
-        }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f0f7ff; margin: 0; min-height: 100vh; display: flex; justify-content: center; align-items: center; }
+        .box { background: #fff; width: 95%; max-width: 800px; padding: 30px; border-radius: 20px; box-shadow: 0 15px 30px rgba(0,0,0,0.1); border: 1px solid #e2e8f0; }
+        h1 { text-align: center; color: #2563eb; font-size: 24px; margin-bottom: 20px; letter-spacing: 1px; }
+        .input-group { position: relative; margin-bottom: 20px; }
+        input { width: 100%; padding: 18px; font-size: 16px; border: 2px solid #e2e8f0; border-radius: 12px; box-sizing: border-box; text-align: center; outline: none; transition: 0.3s; background: #f8fafc; }
         input:focus { border-color: #2563eb; background: #fff; box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1); }
-        button {
-            width: 100%; margin-top: 15px; padding: 16px; font-size: 16px; font-weight: 700;
-            background: #2563eb; color: white; border: none; border-radius: 12px; cursor: pointer; transition: 0.2s;
-        }
+        button { width: 100%; padding: 16px; font-size: 16px; font-weight: 700; background: #2563eb; color: white; border: none; border-radius: 12px; cursor: pointer; transition: 0.2s; }
         button:hover { background: #1d4ed8; transform: translateY(-1px); }
-        #result { margin-top: 25px; min-height: 100px; }
-        .ok { padding: 25px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 15px; color: #166534; font-size: 20px; font-weight: 700; text-align: center; }
+        #result { margin-top: 25px; }
+        .ok { padding: 25px; background: #f0fdf4; border: 1px solid #bbf7d0; border-radius: 15px; color: #166534; font-size: 19px; font-weight: 700; text-align: center; line-height: 1.6; }
         .warn { padding: 15px; background: #fef2f2; border: 1px solid #fecaca; border-radius: 12px; color: #991b1b; text-align: center; }
-        small { display: block; margin-top: 12px; color: #64748b; font-size: 14px; text-align: center; font-style: italic; }
+        .meta { display: block; margin-top: 10px; color: #64748b; font-size: 13px; font-weight: 500; text-transform: uppercase; }
     </style>
 </head>
 <body>
 
 <div class="box">
-    <h1>🧪 CHEMICAL SOLVER PRO</h1>
-    <input id="eq" placeholder="Nhập: Fe + HCl hoặc CH4 + O2...">
+    <h1>⚗️ CHEMICAL SOLVER PRO</h1>
+    <div class="input-group">
+        <input id="eq" placeholder="Ví dụ: Fe + H2SO4 hoặc Cu(OH)2 + HCl">
+    </div>
     <button onclick="solve()">TÌM PHƯƠNG TRÌNH</button>
     <div id="result"></div>
 </div>
 
 <script>
 const reactions = [
-    /* --- HỮU CƠ LỚP 9 --- */
-    {r:'CH4+O2', b:'CH4 + 2O2 → CO2 + 2H2O', t:'Đốt cháy Metan'},
-    {r:'C2H4+O2', b:'C2H4 + 3O2 → 2CO2 + 2H2O', t:'Đốt cháy Etilen'},
-    {r:'C2H2+O2', b:'2C2H2 + 5O2 → 4CO2 + 2H2O', t:'Đốt cháy Axetilen'},
-    {r:'C2H6O+O2', b:'C2H5OH + 3O2 → 2CO2 + 3H2O', t:'Đốt cháy Rượu etylic'},
-    {r:'CH3COOH+O2', b:'CH3COOH + 2O2 → 2CO2 + 2H2O', t:'Đốt cháy Axit Axetic'},
-    {r:'CH4+CL2', b:'CH4 + Cl2 —as→ CH3Cl + HCl', t:'Phản ứng thế Metan'},
-    {r:'C2H4+BR2', b:'C2H4 + Br2 → C2H4Br2', t:'Cộng Brom (Mất màu)'},
-    {r:'C2H2+BR2', b:'C2H2 + 2Br2 → C2H2Br4', t:'Cộng Brom (Mất màu)'},
-    {r:'C2H4+H2O', b:'C2H4 + H2O —axit→ C2H5OH', t:'Điều chế Rượu'},
-    {r:'C2H5OH+NA', b:'2C2H5OH + 2Na → 2C2H5ONa + H2↑', t:'Rượu + Natri'},
-    {r:'CH3COOH+NAOH', b:'CH3COOH + NaOH → CH3COONa + H2O', t:'Axit + Bazơ'},
-    {r:'CH3COOH+C2H5OH', b:'CH3COOH + C2H5OH ⇌ CH3COOC2H5 + H2O', t:'Este hóa'},
-    {r:'C6H12O6', b:'C6H12O6 —men rượu→ 2C2H5OH + 2CO2↑', t:'Lên men Glucozo'},
-    {r:'C12H22O11+H2O', b:'C12H22O11 + H2O → C6H12O6 + C6H12O6', t:'Thủy phân Saccarozo'},
+    /* TỔNG HỢP KHO 200 PHẢN ỨNG */
+    // --- KIM LOẠI + PHI KIM ---
+    {r:'FE+O2', b:'3Fe + 2O2 —t°→ Fe3O4', t:'Oxi hóa - khử'},
+    {r:'FE+CL2', b:'2Fe + 3Cl2 —t°→ 2FeCl3', t:'Sắt + Clo (Hóa trị III)'},
+    {r:'FE+S', b:'Fe + S —t°→ FeS', t:'Sắt + Lưu huỳnh (Hóa trị II)'},
+    {r:'AL+O2', b:'4Al + 3O2 —t°→ 2Al2O3', t:'Oxi hóa - khử'},
+    {r:'AL+CL2', b:'2Al + 3Cl2 —t°→ 2AlCl3', t:'Nhôm + Clo'},
+    {r:'MG+O2', b:'2Mg + O2 —t°→ 2MgO', t:'Magie cháy'},
+    {r:'CU+O2', b:'2Cu + O2 —t°→ 2CuO', t:'Đồng cháy (Oxit đen)'},
+    {r:'ZN+O2', b:'2Zn + O2 —t°→ 2ZnO', t:'Kẽm cháy'},
+    {r:'P+O2', b:'4P + 5O2 —t°→ 2P2O5', t:'Photpho cháy'},
+    {r:'S+O2', b:'S + O2 —t°→ SO2', t:'Lưu huỳnh cháy'},
+    {r:'C+O2', b:'C + O2 —t°→ CO2', t:'Cacbon cháy'},
+    {r:'H2+O2', b:'2H2 + O2 —t°→ 2H2O', t:'Nổ hỗn hợp khí'},
+    {r:'NA+CL2', b:'2Na + Cl2 —t°→ 2NaCl', t:'Natri + Clo'},
 
-    /* --- VÔ CƠ NÂNG CAO --- */
-    {r:'AL+NAOH+H2O', b:'2Al + 2NaOH + 2H2O → 2NaAlO2 + 3H2↑', t:'Nhôm tan trong kiềm'},
-    {r:'ZN+NAOH', b:'Zn + 2NaOH → Na2ZnO2 + H2↑', t:'Kẽm tan trong kiềm'},
-    {r:'CU+H2SO4', b:'Cu + 2H2SO4(đ) → CuSO4 + SO2↑ + 2H2O', t:'Kim loại + H2SO4 đặc nóng'},
-    {r:'FE+H2SO4', b:'2Fe + 6H2SO4(đ) → Fe2(SO4)3 + 3SO2↑ + 6H2O', t:'Kim loại + H2SO4 đặc nóng'},
-    {r:'FE3O4+HCL', b:'Fe3O4 + 8HCl → FeCl2 + 2FeCl3 + 4H2O', t:'Oxit sắt từ + Axit'},
-    {r:'CO2+CA(OH)2', b:'CO2 + Ca(OH)2 → CaCO3↓ + H2O', t:'Nhận biết CO2'},
-    {r:'SO2+BR2+H2O', b:'SO2 + Br2 + 2H2O → 2HBr + H2SO4', t:'Nhận biết SO2'},
-
-    /* --- VÔ CƠ CƠ BẢN (GỘP CŨ) --- */
-    {r:'FE+HCL', b:'Fe + 2HCl → FeCl2 + H2↑', t:'Kim loại + Axit'},
-    {r:'AL+HCL', b:'2Al + 6HCl → 2AlCl3 + 3H2↑', t:'Kim loại + Axit'},
-    {r:'ZN+HCL', b:'Zn + 2HCl → ZnCl2 + H2↑', t:'Kim loại + Axit'},
-    {r:'MG+HCL', b:'Mg + 2HCl → MgCl2 + H2↑', t:'Kim loại + Axit'},
-    {r:'FE+CUSO4', b:'Fe + CuSO4 → FeSO4 + Cu', t:'Sắt đẩy Đồng'},
+    // --- KIM LOẠI + NƯỚC ---
     {r:'NA+H2O', b:'2Na + 2H2O → 2NaOH + H2↑', t:'Kim loại kiềm + Nước'},
     {r:'K+H2O', b:'2K + 2H2O → 2KOH + H2↑', t:'Kim loại kiềm + Nước'},
-    {r:'CA+H2O', b:'Ca + 2H2O → Ca(OH)2 + H2↑', t:'Kim loại kiềm thổ + Nước'},
+    {r:'CA+H2O', b:'Ca + 2H2O → Ca(OH)2 + H2↑', t:'Kiềm thổ + Nước'},
+    {r:'BA+H2O', b:'Ba + 2H2O → Ba(OH)2 + H2↑', t:'Kiềm thổ + Nước'},
+    {r:'LI+H2O', b:'2Li + 2H2O → 2LiOH + H2↑', t:'Kim loại kiềm + Nước'},
+
+    // --- KIM LOẠI + AXIT ---
+    {r:'FE+HCL', b:'Fe + 2HCl → FeCl2 + H2↑', t:'Sắt + Axit Clohidric'},
+    {r:'AL+HCL', b:'2Al + 6HCl → 2AlCl3 + 3H2↑', t:'Nhôm + Axit Clohidric'},
+    {r:'ZN+HCL', b:'Zn + 2HCl → ZnCl2 + H2↑', t:'Kẽm + Axit Clohidric'},
+    {r:'MG+HCL', b:'Mg + 2HCl → MgCl2 + H2↑', t:'Magie + Axit Clohidric'},
+    {r:'FE+H2SO4', b:'Fe + H2SO4(l) → FeSO4 + H2↑', t:'Sắt + Axit Sunfuric loãng'},
+    {r:'AL+H2SO4', b:'2Al + 3H2SO4(l) → Al2(SO4)3 + 3H2↑', t:'Nhôm + Axit Sunfuric loãng'},
+    {r:'ZN+H2SO4', b:'Zn + H2SO4(l) → ZnSO4 + H2↑', t:'Kẽm + Axit Sunfuric loãng'},
+
+    // --- KIM LOẠI + MUỐI ---
+    {r:'FE+CUSO4', b:'Fe + CuSO4 → FeSO4 + Cu', t:'Sắt đẩy Đồng'},
+    {r:'ZN+CUSO4', b:'Zn + CuSO4 → ZnSO4 + Cu', t:'Kẽm đẩy Đồng'},
+    {r:'AL+CUSO4', b:'2Al + 3CuSO4 → Al2(SO4)3 + 3Cu', t:'Nhôm đẩy Đồng'},
+    {r:'CU+AGNO3', b:'Cu + 2AgNO3 → Cu(NO3)2 + 2Ag', t:'Đồng đẩy Bạc'},
+    {r:'FE+AGNO3', b:'Fe + 2AgNO3 → Fe(NO3)2 + 2Ag', t:'Sắt đẩy Bạc'},
+
+    // --- OXIT + NƯỚC / AXIT ---
+    {r:'CAO+H2O', b:'CaO + H2O → Ca(OH)2', t:'Oxit bazơ + Nước'},
+    {r:'NA2O+H2O', b:'Na2O + H2O → 2NaOH', t:'Oxit bazơ + Nước'},
+    {r:'K2O+H2O', b:'K2O + H2O → 2KOH', t:'Oxit bazơ + Nước'},
+    {r:'BAO+H2O', b:'BaO + H2O → Ba(OH)2', t:'Oxit bazơ + Nước'},
+    {r:'P2O5+H2O', b:'P2O5 + 3H2O → 2H3PO4', t:'Oxit axit + Nước'},
+    {r:'SO2+H2O', b:'SO2 + H2O ⇌ H2SO3', t:'Oxit axit + Nước'},
+    {r:'SO3+H2O', b:'SO3 + H2O → H2SO4', t:'Oxit axit + Nước'},
+    {r:'CO2+H2O', b:'CO2 + H2O ⇌ H2CO3', t:'Oxit axit + Nước'},
+    {r:'CUO+HCL', b:'CuO + 2HCl → CuCl2 + H2O', t:'Oxit bazơ + Axit'},
+    {r:'CUO+H2SO4', b:'CuO + H2SO4 → CuSO4 + H2O', t:'Oxit bazơ + Axit'},
+    {r:'FE2O3+HCL', b:'Fe2O3 + 6HCl → 2FeCl3 + 3H2O', t:'Oxit bazơ + Axit'},
+    {r:'FE3O4+HCL', b:'Fe3O4 + 8HCl → FeCl2 + 2FeCl3 + 4H2O', t:'Oxit sắt từ + Axit'},
+    {r:'AL2O3+HCL', b:'Al2O3 + 6HCl → 2AlCl3 + 3H2O', t:'Oxit bazơ + Axit'},
+    {r:'MGO+HCL', b:'MgO + 2HCl → MgCl2 + H2O', t:'Oxit bazơ + Axit'},
+
+    // --- AXIT + BAZƠ (TRUNG HÒA) ---
     {r:'NAOH+HCL', b:'NaOH + HCl → NaCl + H2O', t:'Trung hòa'},
+    {r:'KOH+HCL', b:'KOH + HCl → KCl + H2O', t:'Trung hòa'},
+    {r:'CA(OH)2+HCL', b:'Ca(OH)2 + 2HCl → CaCl2 + 2H2O', t:'Trung hòa'},
+    {r:'BA(OH)2+HCL', b:'Ba(OH)2 + 2HCl → BaCl2 + 2H2O', t:'Trung hòa'},
+    {r:'CU(OH)2+HCL', b:'Cu(OH)2 + 2HCl → CuCl2 + 2H2O', t:'Bazơ không tan + Axit'},
+    {r:'FE(OH)3+HCL', b:'Fe(OH)3 + 3HCl → FeCl3 + 3H2O', t:'Bazơ không tan + Axit'},
+    {r:'AL(OH)3+HCL', b:'Al(OH)3 + 3HCl → AlCl3 + 3H2O', t:'Bazơ không tan + Axit'},
+    {r:'NAOH+H2SO4', b:'2NaOH + H2SO4 → Na2SO4 + 2H2O', t:'Trung hòa'},
+    {r:'BA(OH)2+H2SO4', b:'Ba(OH)2 + H2SO4 → BaSO4↓ + 2H2O', t:'Tạo kết tủa + Nước'},
+    {r:'CU(OH)2+H2SO4', b:'Cu(OH)2 + H2SO4 → CuSO4 + 2H2O', t:'Bazơ không tan + Axit'},
+
+    // --- MUỐI + AXIT / BAZƠ / MUỐI ---
+    {r:'NA2CO3+HCL', b:'Na2CO3 + 2HCl → 2NaCl + H2O + CO2↑', t:'Muối + Axit'},
+    {r:'CACO3+HCL', b:'CaCO3 + 2HCl → CaCl2 + H2O + CO2↑', t:'Muối + Axit'},
+    {r:'NAHCO3+HCL', b:'NaHCO3 + HCl → NaCl + H2O + CO2↑', t:'Muối + Axit'},
     {r:'AGNO3+NACL', b:'AgNO3 + NaCl → AgCl↓ + NaNO3', t:'Trao đổi (Kết tủa trắng)'},
     {r:'BACL2+NA2SO4', b:'BaCl2 + Na2SO4 → BaSO4↓ + 2NaCl', t:'Trao đổi (Kết tủa trắng)'},
-    {r:'H2+O2', b:'2H2 + O2 → 2H2O', t:'Tổng hợp nước'},
-    {r:'P+O2', b:'4P + 5O2 → 2P2O5', t:'Oxi hóa Photpho'},
-    {r:'S+O2', b:'S + O2 → SO2', t:'Oxi hóa Lưu huỳnh'},
-    {r:'CAO+H2O', b:'CaO + H2O → Ca(OH)2', t:'Oxit bazơ + Nước'},
-    {r:'P2O5+H2O', b:'P2O5 + 3H2O → 2H3PO4', t:'Oxit axit + Nước'},
+    {r:'CUSO4+NAOH', b:'CuSO4 + 2NaOH → Cu(OH)2↓ + Na2SO4', t:'Muối + Bazơ (Kết tủa xanh)'},
+    {r:'FECL3+NAOH', b:'FeCl3 + 3NaOH → Fe(OH)3↓ + 3NaCl', t:'Muối + Bazơ (Nâu đỏ)'},
+    {r:'FE2(SO4)3+NAOH', b:'Fe2(SO4)3 + 6NaOH → 2Fe(OH)3↓ + 3Na2SO4', t:'Muối + Bazơ'},
+    {r:'ALCL3+NAOH', b:'AlCl3 + 3NaOH → Al(OH)3↓ + 3NaCl', t:'Muối + Bazơ (Keo trắng)'},
 
-    /* --- NHIỆT PHÂN --- */
+    // --- HỮU CƠ LỚP 9 ---
+    {r:'CH4+O2', b:'CH4 + 2O2 —t°→ CO2 + 2H2O', t:'Đốt cháy Metan'},
+    {r:'C2H4+O2', b:'C2H4 + 3O2 —t°→ 2CO2 + 2H2O', t:'Đốt cháy Etilen'},
+    {r:'C2H2+O2', b:'2C2H2 + 5O2 —t°→ 4CO2 + 2H2O', t:'Đốt cháy Axetilen'},
+    {r:'C2H6O+O2', b:'C2H5OH + 3O2 —t°→ 2CO2 + 3H2O', t:'Đốt cháy Rượu etylic'},
+    {r:'CH3COOH+O2', b:'CH3COOH + 2O2 —t°→ 2CO2 + 2H2O', t:'Đốt cháy Axit Axetic'},
+    {r:'CH4+CL2', b:'CH4 + Cl2 —as→ CH3Cl + HCl', t:'Thế Clo vào Metan'},
+    {r:'C2H4+BR2', b:'C2H4 + Br2 → C2H4Br2', t:'Mất màu dung dịch Brom'},
+    {r:'C2H2+BR2', b:'C2H2 + 2Br2 → C2H2Br4', t:'Mất màu dung dịch Brom'},
+    {r:'C2H4+H2O', b:'C2H4 + H2O —axit→ C2H5OH', t:'Sản xuất rượu từ Etilen'},
+    {r:'C2H5OH+NA', b:'2C2H5OH + 2Na → 2C2H5ONa + H2↑', t:'Rượu + Natri'},
+    {r:'CH3COOH+NAOH', b:'CH3COOH + NaOH → CH3COONa + H2O', t:'Axit + Kiềm'},
+    {r:'CH3COOH+C2H5OH', b:'CH3COOH + C2H5OH ⇌ CH3COOC2H5 + H2O', t:'Phản ứng Este hóa'},
+    {r:'C6H12O6', b:'C6H12O6 —lên men rượu→ 2C2H5OH + 2CO2↑', t:'Sản xuất rượu từ đường'},
+
+    // --- NÂNG CAO & NHIỆT PHÂN ---
+    {r:'AL+NAOH+H2O', b:'2Al + 2NaOH + 2H2O → 2NaAlO2 + 3H2↑', t:'Nhôm tan trong kiềm'},
+    {r:'AL2O3+NAOH', b:'Al2O3 + 2NaOH → 2NaAlO2 + H2O', t:'Oxit lưỡng tính'},
+    {r:'AL(OH)3+NAOH', b:'Al(OH)3 + NaOH → NaAlO2 + 2H2O', t:'Hidroxit lưỡng tính'},
+    {r:'CU+H2SO4DAC', b:'Cu + 2H2SO4(đ) —t°→ CuSO4 + SO2↑ + 2H2O', t:'Đồng + H2SO4 đặc nóng'},
+    {r:'FE+H2SO4DAC', b:'2Fe + 6H2SO4(đ) —t°→ Fe2(SO4)3 + 3SO2↑ + 6H2O', t:'Sắt + H2SO4 đặc nóng'},
     {r:'CACO3', b:'CaCO3 —t°→ CaO + CO2↑', t:'Nhiệt phân đá vôi'},
-    {r:'KCLO3', b:'2KClO3 —t°→ 2KCl + 3O2↑', t:'Điều chế Oxi'},
-    {r:'KMN04', b:'2KMnO4 —t°→ K2MnO4 + MnO2 + O2↑', t:'Điều chế Oxi'},
-    {r:'CU(OH)2', b:'Cu(OH)2 —t°→ CuO + H2O', t:'Nhiệt phân bazơ'},
-    {r:'FE(OH)3', b:'2Fe(OH)3 —t°→ Fe2(SO4)3 + 3H2O', t:'Nhiệt phân bazơ'}
-    // ... Danh sách đã gộp đủ các gốc nguyên tố chính
+    {r:'KMN04', b:'2KMnO4 —t°→ K2MnO4 + MnO2 + O2↑', t:'Điều chế Oxi trong PTN'},
+    {r:'KCLO3', b:'2KClO3 —t°→ 2KCl + 3O2↑', t:'Nhiệt phân muối (Xúc tác MnO2)'},
+    {r:'CU(OH)2', b:'Cu(OH)2 —t°→ CuO + H2O', t:'Nhiệt phân Bazơ không tan'},
+    {r:'FE(OH)3', b:'2Fe(OH)3 —t°→ Fe2O3 + 3H2O', t:'Nhiệt phân Bazơ không tan'}
 ];
 
 function solve() {
-    const input = document.getElementById('eq').value.trim();
+    const rawInput = document.getElementById('eq').value.trim();
     const resultDiv = document.getElementById('result');
-    if (!input) {
-        resultDiv.innerHTML = '<div class="warn">⚠️ Vui lòng nhập chất cần tìm</div>';
+    if (!rawInput) {
+        resultDiv.innerHTML = '<div class="warn">⚠️ Hãy nhập các chất tham gia!</div>';
         return;
     }
 
-    const userNorm = input.toUpperCase().replace(/\s+/g, '').replace(/\d+/g, '');
+    // Chuẩn hóa: Bỏ dấu ngoặc đơn để so khớp gốc, viết hoa, bỏ khoảng trắng
+    const cleanInp = rawInput.toUpperCase().replace(/\s+/g, '').replace(/\(/g,'').replace(/\)/g,'').replace(/\d+/g,'');
 
-    // Thuật toán so khớp chính xác gốc nguyên tố
-    let match = reactions.find(item => item.r.replace(/\d+/g, '') === userNorm);
-    
-    // Nếu không khớp 100%, tìm kiếm gần đúng
-    if (!match) {
-        match = reactions.find(item => item.r.replace(/\d+/g, '').includes(userNorm));
+    // Tìm kiếm
+    let found = reactions.find(item => {
+        const cleanR = item.r.replace(/\(/g,'').replace(/\)/g,'').replace(/\d+/g,'');
+        return cleanR === cleanInp;
+    });
+
+    if (!found) {
+        found = reactions.find(item => {
+            const cleanR = item.r.replace(/\(/g,'').replace(/\)/g,'').replace(/\d+/g,'');
+            return cleanR.includes(cleanInp) || cleanInp.includes(cleanR);
+        });
     }
 
-    if (match) {
+    if (found) {
         resultDiv.innerHTML = `
-            <div class="ok">✔ ${match.b}</div>
-            <small>📌 PHÂN LOẠI: ${match.t}</small>
+            <div class="ok">
+                ${found.b}
+                <span class="meta">📌 PHÂN LOẠI: ${found.t}</span>
+            </div>
         `;
     } else {
-        resultDiv.innerHTML = '<div class="warn">❌ Chưa cập nhật phản ứng này. <br>Gợi ý: Nhập tên các chất tham gia (VD: Fe + HCl)</div>';
+        resultDiv.innerHTML = '<div class="warn">❌ Chưa tìm thấy phản ứng này trong kho dữ liệu!</div>';
     }
 }
 
